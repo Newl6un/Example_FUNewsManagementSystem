@@ -1,0 +1,48 @@
+﻿@using LeQuangTrungMVC.Models
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Login Page";
+}
+<div class="row justify-content-md-center">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                Login
+            </div>
+            <div class="card-body">
+                <form asp-action="Login" asp-controller="Home" method="post" asp-antiforgery="true">
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" placeholder="Email" />
+                        <span asp-validation-for="Email" class="badge bg-danger mb-1"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+                        <span asp-validation-for="Password" class="badge bg-danger mb-1"></span>
+                    </div>
+                    @if (ViewBag.error != null)
+                    {
+                        <div class="mb-3">
+                            <span class="badge bg-danger">@ViewBag.error</span>
+                        </div>
+
+                    }
+                    <div class="mb-3">
+                        <a href="Register">Register account</a>
+                    </div>
+                    <div class="mb-3">
+                        <input type="submit" name="submit" class="btn btn-primary" value="Login" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

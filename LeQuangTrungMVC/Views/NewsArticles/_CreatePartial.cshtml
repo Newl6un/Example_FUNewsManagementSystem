@@ -1,0 +1,45 @@
+﻿@model LeQuangTrungMVC.BusinessObjects.Models.NewsArticle
+@using LeQuangTrungMVC.BusinessObjects.Enums
+
+<form asp-action="CreateModal" asp-controller="NewsArticles" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group mb-3">
+        <label asp-for="NewsTile" class="control-label"></label>
+        <input asp-for="NewsTile" class="form-control" />
+        <span asp-validation-for="NewsTile" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Headline" class="control-label"></label>
+        <input asp-for="Headline" class="form-control" />
+        <span asp-validation-for="Headline" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="NewsContent" class="control-label"></label>
+        <textarea asp-for="NewsContent" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="NewsContent" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="NewsSource" class="control-label"></label>
+        <input asp-for="NewsSource" class="form-control" />
+        <span asp-validation-for="NewsSource" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="CategoryId" class="control-label"></label>
+        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="NewsStatus" class="control-label"></label>
+        <select asp-for="NewsStatus" asp-items="Html.GetEnumSelectList<NewsStatus>()" class="form-control"></select>
+        <span asp-validation-for="NewsStatus" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" asp-for="CreatedById" value="@ViewBag.AccountId" />
+    <input type="hidden" asp-for="UpdatedById" value="@ViewBag.AccountId" />
+    <input type="hidden" asp-for="CreatedDate" value="@DateTime.Now" />
+    <input type="hidden" asp-for="ModifiedDate" value="@DateTime.Now" />
+
+    <div class="form-group d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>

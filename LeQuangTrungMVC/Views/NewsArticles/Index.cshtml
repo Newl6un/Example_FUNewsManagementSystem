@@ -1,0 +1,276 @@
+﻿@using LeQuangTrungMVC.BusinessObjects.Features
+@using LeQuangTrungMVC.Models.Pagination
+@using LeQuangTrungMVC.BusinessObjects.Enums
+@model NewsArticlePagingViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    var accountId = Context.Session.GetString("AccountId");
+    var role = Context.Session.GetString("AccountRole");
+}
+
+<h1>Index</h1>
+
+@* <button type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#iframeModal">
+    Open iFrame Modal
+</button> *@
+@if ((AccountRole.Staff.ToString()).Equals(role) || (AccountRole.Admin.ToString()).Equals(role))
+{
+    <div class="mb-3">
+        <button type="button" class="btn btn-primary" onclick="modalDialogManager.loadFormModal('@Url.Action("CreateModal", "NewsArticles")', '#commonModal')">
+            Create New Article
+        </button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-3">
+        <div class="mb-3">
+            <select class="justify-content-start" onchange="location = this.options[this.selectedIndex].value;">
+                <option value="@Url.Action("Index", new { pageSize = 2, pageNumber = 1 })">2</option>
+                <option value="@Url.Action("Index", new { pageSize = 4, pageNumber = 1 })" selected="selected">4</option>
+                <option value="@Url.Action("Index", new { pageSize = 10, pageNumber = 1 })">10</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="mb-3">
+            <form asp-action="Index" method="get" class="row">
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="Search by content"
+                           name="SearchByContent"
+                           value="@Model.NewsArticleParameters?.SearchByContent" />
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="mb-3">
+            <select class="justify-content-end" onchange="location = this.options[this.selectedIndex].value;">
+                <option value="@Url.Action("Index", new { OrderBy = "CreatedDate"})" selected="selected">Created date</option>
+                <option value="@Url.Action("Index", new { OrderBy = "CreatedDate desc"})">Created date descending</option>
+                <option value="@Url.Action("Index", new { OrderBy = "ModifiedDate"})">Modified date</option>
+                <option value="@Url.Action("Index", new { OrderBy = "ModifiedDate desc"})">Modified date descending</option>
+                <option value="@Url.Action("Index", new {  OrderBy = "NewsTile "})">Title</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NewsArticles.First().NewsTile)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NewsArticles.First().Headline)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NewsArticles.First().CreatedDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NewsArticles.First().NewsContent)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NewsArticles.First().NewsSource)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NewsArticles.First().NewsStatus)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NewsArticles.First().ModifiedDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NewsArticles.First().Category)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NewsArticles.First().CreatedBy)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NewsArticles.First().UpdatedBy)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.NewsArticles)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NewsTile)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Headline)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NewsContent)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NewsSource)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NewsStatus)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModifiedDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedBy.AccountEmail)
+                        </td>
+                        <td>
+                            @(item.UpdatedBy != null ? @Html.DisplayFor(modelItem => item.UpdatedBy.AccountEmail) : "Admin")
+                        </td>
+                        @*  @if (role.Equals(AccountRole.Staff.ToString()))
+                        {
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.NewsArticleId">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.NewsArticleId">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.NewsArticleId">Delete</a>
+                            </td>
+                        } *@
+                        @if ((AccountRole.Staff.ToString()).Equals(role) || (AccountRole.Admin.ToString()).Equals(role))
+                        {
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="modalDialogManager.loadFormModal('@Url.Action("EditModal", "NewsArticles", new { id = item.NewsArticleId })', '#commonModal')">Edit</button> |
+                                <a asp-action="Details" asp-route-id="@item.NewsArticleId">Details</a> |
+                                @* <a asp-action="Delete" asp-route-id="@item.NewsArticleId">Delete</a> *@
+                                <delete-button controller-name="NewsArticles"
+                                               item-id="@item.NewsArticleId">
+                                </delete-button>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Phân trang -->
+<div class="row">
+    <div class="col">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                @foreach (var link in CreatePaginationLinks(Model.MetaData))
+                {
+                    <li class="page-item @(link.Enabled ? "" : "disabled") @(link.Active ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { pageNumber = link.Page, pageSize = Model.MetaData.PageSize })">@link.Text</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade"
+     id="iframeModal"
+     tabindex="-1"
+     aria-labelledby="iframeModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="iframeModalLabel">iFrame Modal</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <form asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="NewsArticleForCreate.NewsTile" class="control-label"></label>
+                                <input asp-for="NewsArticleForCreate.NewsTile" class="form-control" />
+                                <span asp-validation-for="NewsArticleForCreate.NewsTile" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="NewsArticleForCreate.Headline" class="control-label"></label>
+                                <input asp-for="NewsArticleForCreate.Headline" class="form-control" />
+                                <span asp-validation-for="NewsArticleForCreate.Headline" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="NewsArticleForCreate.NewsContent" class="control-label"></label>
+                                <input asp-for="NewsArticleForCreate.NewsContent" class="form-control" />
+                                <span asp-validation-for="NewsArticleForCreate.NewsContent" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="NewsArticleForCreate.NewsSource" class="control-label"></label>
+                                <input asp-for="NewsArticleForCreate.NewsSource" class="form-control" />
+                                <span asp-validation-for="NewsArticleForCreate.NewsSource" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="NewsArticleForCreate.CategoryId" class="control-label"></label>
+                                <select asp-for="NewsArticleForCreate.CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="NewsArticleForCreate.NewsStatus" class="control-label"></label>
+                                <select asp-for="NewsArticleForCreate.NewsStatus" asp-items="Html.GetEnumSelectList<NewsStatus>()" class="form-control"></select>
+                                <span asp-validation-for="NewsArticleForCreate.NewsStatus" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" asp-for="NewsArticleForCreate.CreatedById" value="@accountId" />
+                                <input type="hidden" asp-for="NewsArticleForCreate.UpdatedById" value="@accountId" />
+                                <input type="hidden" asp-for="NewsArticleForCreate.CreatedDate" value="@DateTime.Now" />
+                                <input type="hidden" asp-for="NewsArticleForCreate.ModifiedDate" value="@DateTime.Now" />
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@functions {
+    public List<PagingLink> CreatePaginationLinks(MetaData metaData)
+    {
+        int spread = 2; // số trang hiển thị xung quanh trang hiện tại
+        var links = new List<PagingLink>();
+
+        // Link "Previous"
+        links.Add(new PagingLink(metaData.CurrentPage - 1, metaData.HasPrevious, "Previous"));
+
+        // Các link trang
+        for (int i = 1; i <= metaData.TotalPages; i++)
+        {
+            if (i >= metaData.CurrentPage - spread && i <= metaData.CurrentPage + spread)
+            {
+                links.Add(new PagingLink(i, true, i.ToString()) { Active = metaData.CurrentPage == i });
+            }
+        }
+
+        // Link "Next"
+        links.Add(new PagingLink(metaData.CurrentPage + 1, metaData.HasNext, "Next"));
+
+        return links;
+    }
+}
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Enable validation for dynamically loaded forms
+        $(document).on('shown.bs.modal', '#commonModal', function () {
+            $.validator.unobtrusive.parse($(this).find('form'));
+        });
+    </script>
+}

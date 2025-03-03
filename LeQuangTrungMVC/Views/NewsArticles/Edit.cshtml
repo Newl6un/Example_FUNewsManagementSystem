@@ -1,0 +1,72 @@
+﻿@model LeQuangTrungMVC.BusinessObjects.Models.NewsArticle
+@using LeQuangTrungMVC.BusinessObjects.Enums
+@{
+    ViewData["Title"] = "Edit";
+    var accountId = Context.Session.GetString("AccountId");
+}
+
+<h1>Edit</h1>
+
+<h4>NewsArticle</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="NewsArticleId" />
+            <div class="form-group">
+                <label asp-for="NewsTile" class="control-label"></label>
+                <input asp-for="NewsTile" class="form-control" />
+                <span asp-validation-for="NewsTile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Headline" class="control-label"></label>
+                <input asp-for="Headline" class="form-control" />
+                <span asp-validation-for="Headline" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedDate" class="control-label"></label>
+                <input asp-for="CreatedDate" class="form-control" />
+                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewsContent" class="control-label"></label>
+                <input asp-for="NewsContent" class="form-control" />
+                <span asp-validation-for="NewsContent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewsSource" class="control-label"></label>
+                <input asp-for="NewsSource" class="form-control" />
+                <span asp-validation-for="NewsSource" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewsStatus" class="control-label"></label>
+                <select asp-for="NewsStatus" asp-items="Html.GetEnumSelectList<NewsStatus>()" class="form-control"></select>
+                <span asp-validation-for="NewsStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="CreatedById" value="@Model.CreatedById" />
+                <input type="hidden" asp-for="UpdatedById" value="@accountId" />
+                <input type="hidden" asp-for="ModifiedDate" value="@DateTime.Now" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

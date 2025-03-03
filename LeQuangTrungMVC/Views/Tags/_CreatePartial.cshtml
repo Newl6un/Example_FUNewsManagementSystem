@@ -1,0 +1,19 @@
+﻿@model LeQuangTrungMVC.BusinessObjects.Models.Tag
+
+<form asp-action="CreateModal" asp-controller="Tags" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group mb-3">
+        <label asp-for="TagName" class="control-label"></label>
+        <input asp-for="TagName" class="form-control" />
+        <span asp-validation-for="TagName" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Note" class="control-label"></label>
+        <input asp-for="Note" class="form-control" />
+        <span asp-validation-for="Note" class="text-danger"></span>
+    </div>
+    <div class="form-group mt-3 d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>

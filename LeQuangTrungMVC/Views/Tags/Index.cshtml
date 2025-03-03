@@ -1,0 +1,120 @@
+﻿@* @model IEnumerable<LeQuangTrungMVC.BusinessObjects.Models.Tag>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TagName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Note)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TagName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Note)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.TagId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.TagId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.TagId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+ *@
+@using LeQuangTrungMVC.BusinessObjects.Enums;
+@model IEnumerable<LeQuangTrungMVC.BusinessObjects.Models.Tag>
+
+@{
+    ViewData["Title"] = "Tags";
+    var role = Context.Session.GetString("AccountRole");
+    bool isStaffOrAdmin = role != null &&
+        (role.Equals(AccountRole.Staff.ToString()) || role.Equals(AccountRole.Admin.ToString()));
+}
+
+<h1>Tags</h1>
+
+@if (isStaffOrAdmin)
+{
+    <div class="mb-3">
+        <button type="button" class="btn btn-primary"
+                onclick="modalDialogManager.loadFormModal('@Url.Action("CreateModal", "Tags")', '#commonModal')">
+            Create New Tag
+        </button>
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.TagName)</th>
+            <th>@Html.DisplayNameFor(model => model.Note)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.TagName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Note)</td>
+                <td>
+                    @if (isStaffOrAdmin)
+                    {
+                        <button type="button" class="btn btn-sm btn-primary"
+                                onclick="modalDialogManager.loadFormModal('@Url.Action("EditModal", "Tags", new { id = item.TagId })', '#commonModal')">
+                            Edit
+                        </button>
+                        <a asp-action="Details" asp-route-id="@item.TagId" class="btn btn-sm btn-info">Details</a>
+                        @*  <button type="button" class="btn btn-sm btn-danger"
+                                data-delete-url="@Url.Action("Delete", "Tags", new { id = item.TagId })"
+                                data-delete-name="@item.TagName"
+                                data-delete-type="Tag">
+                            Delete
+                        </button> *@
+                        <delete-button controller-name="Tags"
+                                       item-id="@item.TagId"
+                                       item-name="@item.TagName">
+                        </delete-button>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.TagId" class="btn btn-sm btn-info">Details</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Enable validation for dynamically loaded forms
+        $(document).on('shown.bs.modal', '#commonModal', function () {
+            $.validator.unobtrusive.parse($(this).find('form'));
+        });
+    </script>
+}

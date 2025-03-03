@@ -1,0 +1,56 @@
+﻿@using LeQuangTrungMVC.BusinessObjects.Models
+@model SystemAccount
+
+@{
+    ViewBag.Title = "Register";
+}
+<div class="row justify-content-md-center">
+    <div class="col-md-5">
+        <form asp-action="Register" asp-controller="Home" method="post">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Register</div>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="AccountName" class="form-label"></label>
+                        <input asp-for="AccountName" class="form-control" placeholder="Name" />
+                        <span asp-validation-for="AccountName" class="badge bg-danger mb-1"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="AccountEmail" class="form-label"></label>
+                        <input asp-for="AccountEmail" class="form-control" placeholder="Email" />
+                        <span asp-validation-for="AccountEmail" class="badge bg-danger mb-1"></span>
+
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="AccountPassword" class="form-label"></label>
+                        <input asp-for="AccountPassword" type="password" class="form-control" placeholder="Password" />
+                        <span asp-validation-for="AccountPassword" class="badge bg-danger mb-1"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label"></label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
+                        <span asp-validation-for="ConfirmPassword" class="badge bg-danger mb-1"></span>
+                    </div>
+                    @if (ViewBag.error != null)
+                    {
+                        <div class="mb-3">
+                            <span class="badge bg-danger">@ViewBag.error</span>
+                        </div>
+                    }
+                    <div class="mb-3">
+                        <input type="submit" name="submit" class="btn btn-danger" value="Register" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
